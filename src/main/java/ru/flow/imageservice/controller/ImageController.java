@@ -15,6 +15,6 @@ public class ImageController {
 
     @GetMapping("/image")
     public byte[] image(@RequestParam String url) {
-
+        return new byte[0];
     }
 }
