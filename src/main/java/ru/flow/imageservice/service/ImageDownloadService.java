@@ -2,6 +2,9 @@ package ru.flow.imageservice.service;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import ru.flow.imageservice.dto.DownloadedImage;
 import ru.flow.imageservice.exception.InvalidUrlException;
@@ -18,17 +21,32 @@ public class ImageDownloadService {
         if (url == null || url.isBlank()) {
             throw new InvalidUrlException("The URL cannot be empty.");
         }
-        ResponseEntity<byte[]> response = restClient.get()
-                .uri(url)
-                .retrieve()
-                .toEntity(byte[].class);
-        byte[] data = response.getBody();
-        MediaType contentType = response.getHeaders().getContentType();
-
-        if (contentType == null) {
-            contentType = MediaType.APPLICATION_OCTET_STREAM;
+        if (!url.startsWith("http://") && !url.startsWith("https://")) {
+            throw new InvalidUrlException("URL must start with http:// or https://");
         }
 
-        return new DownloadedImage(data, contentType);
+        try {
+            ResponseEntity<byte[]> response = restClient.get()
+                    .uri(url)
+                    .retrieve()
+                    .toEntity(byte[].class);
+            byte[] data = response.getBody();
+            MediaType contentType = response.getHeaders().getContentType();
+
+            if (contentType == null) {
+                contentType = MediaType.APPLICATION_OCTET_STREAM;
+            }
+
+            return new DownloadedImage(data, contentType);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidUrlException("Invalid URL: " + url);
+        }
+        catch (ResourceAccessException e) {
+
+        }
+        catch (HttpClientErrorException | HttpServerErrorException e) {
+
+        }
+        return null;
     }
 }
