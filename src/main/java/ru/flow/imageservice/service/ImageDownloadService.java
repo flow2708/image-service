@@ -49,10 +49,10 @@ public class ImageDownloadService {
             throw new InvalidUrlException("Invalid URL: " + url);
         }
         catch (ResourceAccessException e) {
-
+            //TODO
         }
         catch (HttpClientErrorException | HttpServerErrorException e) {
-
+            //TODO
         }
         return null;
     }
