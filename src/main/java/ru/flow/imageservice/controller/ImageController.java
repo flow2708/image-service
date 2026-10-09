@@ -17,9 +17,9 @@ public class ImageController {
 
     @GetMapping("/image")
     public ResponseEntity<byte[]> image(@RequestParam String url) {
-        DownloadedImage downloadedImage = imageDownloadService.download(url);
+        DownloadedImage downloaded = imageDownloadService.download(url);
         return ResponseEntity.ok()
-                .contentType(downloadedImage.contentType())
-                .body(downloadedImage.data());
+                .contentType(downloaded.contentType())
+                .body(downloaded.data());
     }
 }
