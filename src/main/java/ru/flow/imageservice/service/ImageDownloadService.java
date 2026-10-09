@@ -9,6 +9,7 @@ import org.springframework.web.client.RestClient;
 import ru.flow.imageservice.dto.DownloadedImage;
 import ru.flow.imageservice.exception.InvalidUrlException;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
 public class ImageDownloadService {
@@ -23,6 +24,12 @@ public class ImageDownloadService {
         }
         if (!url.startsWith("http://") && !url.startsWith("https://")) {
             throw new InvalidUrlException("URL must start with http:// or https://");
+        }
+
+        try {
+            new URI(url);
+        } catch (URISyntaxException e) {
+            throw new InvalidUrlException("URI syntax error");
         }
 
         try {
