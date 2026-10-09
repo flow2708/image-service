@@ -1,8 +1,10 @@
 package ru.flow.imageservice.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.flow.imageservice.dto.DownloadedImage;
 import ru.flow.imageservice.service.ImageDownloadService;
 
 @RestController
@@ -14,7 +16,10 @@ public class ImageController {
     }
 
     @GetMapping("/image")
-    public byte[] image(@RequestParam String url) {
-        return new byte[0];
+    public ResponseEntity<byte[]> image(@RequestParam String url) {
+        DownloadedImage downloadedImage = imageDownloadService.download(url);
+        return ResponseEntity.ok()
+                .contentType(downloadedImage.contentType())
+                .body(downloadedImage.data());
     }
 }
