@@ -59,7 +59,7 @@ public class ImageDownloadService {
             throw new NetworkErrorException("Network error: " + e.getMessage());
         }
         catch (HttpClientErrorException e) {
-            throw new HttpClientException("Source returned " + e.getStatusCode() + " for " + url);
+            throw new HttpClientException("Source returned " + e.getStatusCode());
         }
         catch (HttpServerErrorException e) {
             throw new HttpServerException("Http server error: " + ((HttpServerErrorException) e).getMessage());
