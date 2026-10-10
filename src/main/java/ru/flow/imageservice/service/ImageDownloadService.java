@@ -21,6 +21,7 @@ public class ImageDownloadService {
     public ImageDownloadService(RestClient restClient) {
         this.restClient = restClient;
     }
+
     public DownloadedImage download(String url) {
         if (url == null || url.isBlank()) {
             throw new InvalidUrlException("The URL cannot be empty.");
