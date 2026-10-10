@@ -58,11 +58,11 @@ public class ImageDownloadService {
             }
             throw new NetworkErrorException("Network error: " + e.getMessage());
         }
-        catch (HttpClientErrorException | HttpServerErrorException e) {
-            if (e instanceof HttpServerErrorException) {
-                throw new HttpServerException("Http server error: " + ((HttpServerErrorException) e).getMessage());
-            }
-            throw new HttpClientException("Http client error: " + ((HttpClientErrorException) e).getMessage());
+        catch (HttpClientErrorException e) {
+            throw new HttpClientException("Source returned " + e.getStatusCode() + " for " + url);
+        }
+        catch (HttpServerErrorException e) {
+            throw new HttpServerException("Http server error: " + ((HttpServerErrorException) e).getMessage());
         }
     }
 }
