@@ -2,17 +2,21 @@ package ru.flow.imageservice.service;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import ru.flow.imageservice.dto.DownloadedImage;
+import ru.flow.imageservice.exception.HttpClientException;
+import ru.flow.imageservice.exception.HttpServerException;
 import ru.flow.imageservice.exception.InvalidUrlException;
 import ru.flow.imageservice.exception.NetworkErrorException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 
+@Service
 public class ImageDownloadService {
     private final RestClient restClient;
 
@@ -50,11 +54,13 @@ public class ImageDownloadService {
             throw new InvalidUrlException("Invalid URL: " + url);
         }
         catch (ResourceAccessException e) {
-            throw new NetworkErrorException("Network error: " + url);
+            throw new NetworkErrorException("Network error: " + e.getMessage());
         }
         catch (HttpClientErrorException | HttpServerErrorException e) {
-            //TODO
+            if (e instanceof HttpServerErrorException) {
+                throw new HttpServerException("Http server error: " + ((HttpServerErrorException) e).getMessage());
+            }
+            throw new HttpClientException("Http client error: " + ((HttpClientErrorException) e).getMessage());
         }
-        return null;
     }
 }
