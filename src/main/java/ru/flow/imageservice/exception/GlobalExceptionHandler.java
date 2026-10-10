@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpClientException.class)
     public ResponseEntity<ApiError> handleHttpClient(HttpClientException e) {
         log.warn("Http client error: {}", e.getMessage());
-        return ResponseEntity.status(400)
+        return ResponseEntity.status(502)
                 .body(new ApiError("HTTP_CLIENT_ERROR", e.getMessage()));
     }
 
