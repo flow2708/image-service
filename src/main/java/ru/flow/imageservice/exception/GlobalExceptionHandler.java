@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NetworkErrorException.class)
     public ResponseEntity<ApiError> handleNetworkError(NetworkErrorException e) {
         log.warn("Network error: {}", e.getMessage());
-        return ResponseEntity.status(599)
+        return ResponseEntity.status(502)
                 .body(new ApiError("NETWORK_ERROR", e.getMessage()));
     }
 }
