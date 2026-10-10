@@ -38,4 +38,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(400)
                 .body(new ApiError("INVALID_URL", e.getMessage()));
     }
+    @ExceptionHandler(NetworkErrorException.class)
+    public ResponseEntity<ApiError> handleNetworkError(NetworkErrorException e) {
+        log.warn("Network error: ", e.getMessage());
+        return ResponseEntity.status(599)
+                .body(new ApiError("NETWORK_ERROR", e.getMessage()));
+    }
 }

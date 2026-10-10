@@ -8,6 +8,7 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import ru.flow.imageservice.dto.DownloadedImage;
 import ru.flow.imageservice.exception.InvalidUrlException;
+import ru.flow.imageservice.exception.NetworkErrorException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -49,7 +50,7 @@ public class ImageDownloadService {
             throw new InvalidUrlException("Invalid URL: " + url);
         }
         catch (ResourceAccessException e) {
-            //TODO
+            throw new NetworkErrorException("Network error: " + url);
         }
         catch (HttpClientErrorException | HttpServerErrorException e) {
             //TODO
