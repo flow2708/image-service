@@ -8,11 +8,9 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 import ru.flow.imageservice.dto.DownloadedImage;
-import ru.flow.imageservice.exception.HttpClientException;
-import ru.flow.imageservice.exception.HttpServerException;
-import ru.flow.imageservice.exception.InvalidUrlException;
-import ru.flow.imageservice.exception.NetworkErrorException;
+import ru.flow.imageservice.exception.*;
 
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -54,6 +52,9 @@ public class ImageDownloadService {
             throw new InvalidUrlException("Invalid URL: " + url);
         }
         catch (ResourceAccessException e) {
+            if (e.getCause() instanceof SocketTimeoutException) {
+                throw new ImageSourceTimeoutException("Image source timeout: " + url);
+            }
             throw new NetworkErrorException("Network error: " + e.getMessage());
         }
         catch (HttpClientErrorException | HttpServerErrorException e) {
